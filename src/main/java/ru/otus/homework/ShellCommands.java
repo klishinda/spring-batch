@@ -4,7 +4,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.homework.bookRepository.BookRepository;
-import ru.otus.homework.model.Book;
+import ru.otus.homework.model.postgresql.Book;
 
 import java.util.*;
 
