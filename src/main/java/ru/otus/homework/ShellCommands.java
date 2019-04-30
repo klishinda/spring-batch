@@ -1,12 +1,5 @@
 package ru.otus.homework;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -19,16 +12,12 @@ import java.util.*;
 @ShellComponent
 public class ShellCommands {
     private BookRepository bookRepository;
-    private JobLauncher jobLauncher;
-    private Job job;
 
-    public ShellCommands(BookRepository bookRepository, JobLauncher jobLauncher, Job job) {
+    public ShellCommands(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-        this.jobLauncher = jobLauncher;
-        this.job = job;
     }
 
-    // Testing connection with Postgresql
+    // Books
     @ShellMethod("Get book by id")
     private Book getBookById(@ShellOption Long id) {
         return bookRepository.findBookById(id);
@@ -42,11 +31,5 @@ public class ShellCommands {
             str.add(b.getName() + b.getPages());
         }
         return str;
-    }
-
-    // Run batch
-    @ShellMethod("Start converting")
-    public void startJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
-        jobLauncher.run(job, new JobParameters());
     }
 }

@@ -25,11 +25,15 @@ public class NewBook {
   private Set<NewGenre> genres;
   private Set<NewComment> comments;
 
-  public NewBook(String name, int pages, Set<NewAuthor> authors, Set<NewGenre> genres, Set<NewComment> comments) {
+  public NewBook(String name, int pages) {
+    this.name = name;
+    this.pages = pages;
+  }
+
+  public NewBook(String name, int pages, Set<NewAuthor> authors, Set<NewGenre> genres) {
     this.name = name;
     this.pages = pages;
     this.authors = authors;
     this.genres = genres;
-    this.comments = comments;
   }
 }

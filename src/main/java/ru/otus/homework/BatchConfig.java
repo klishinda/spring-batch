@@ -17,16 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import ru.otus.homework.model.mongo.NewAuthor;
 import ru.otus.homework.model.mongo.NewBook;
-import ru.otus.homework.model.mongo.NewComment;
-import ru.otus.homework.model.mongo.NewGenre;
 import ru.otus.homework.model.postgresql.Book;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
 @Configuration
 @EnableBatchProcessing
@@ -42,29 +38,18 @@ public class BatchConfig extends DefaultBatchConfigurer {
     this.stepBuilderFactory = stepBuilderFactory;
   }
 
-  @Override
-  public void setDataSource(DataSource dataSource) {}
-
   @Bean
   public ItemReader<Book> reader(EntityManagerFactory entityManagerFactory) {
     return new JpaPagingItemReaderBuilder<Book>()
             .name("BookReader")
             .entityManagerFactory(entityManagerFactory)
-            .queryString("select b from Book b")
+            .queryString("select * from Book b")
             .build();
   }
 
   @Bean
-  public ItemProcessor processor() {
-      return (ItemProcessor<Book, NewBook>) book -> {
-          String name = book.getName();
-          int pages = book.getPages();
-          Set<NewAuthor> newAuthors = book.getAuthors().stream().map(NewAuthor::convertAuthor).collect(Collectors.toSet());
-          Set<NewGenre> newGenres = book.getGenres().stream().map(NewGenre::convertGenre).collect(Collectors.toSet());
-          Set<NewComment> newComments = book.getComments().stream().map(NewComment::convertComment).collect(Collectors.toSet());
-
-          return new NewBook(name, pages, newAuthors, newGenres, newComments);
-      };
+  public void processor() {
+    // доделать
   }
 
   @Bean
@@ -84,31 +69,36 @@ public class BatchConfig extends DefaultBatchConfigurer {
             .listener(new JobExecutionListener() {
               @Override
               public void beforeJob(JobExecution jobExecution) {
-                logger.info("---------------------->Start job");
+                logger.info("Start job");
               }
 
               @Override
               public void afterJob(JobExecution jobExecution) {
-                logger.info("<----------------------End job");
+                logger.info("End job");
               }
             })
             .build();
   }
 
   @Bean
-  public Step step1(ItemReader reader, ItemWriter writer, ItemProcessor processor) {
+  public Step step1(ItemReader reader, ItemWriter writer, ItemProcessor itemProcessor) {
     return stepBuilderFactory.get("step1")
-            .chunk(2)
+            .chunk(1)
             .reader(reader)
-            .processor(processor)
+            .processor(itemProcessor)
             .writer(writer)
             .listener(new ItemReadListener<Book>() {
+              @Override
               public void beforeRead() {
                 logger.info("Start read");
               }
+
+              @Override
               public void afterRead(Book book) {
                 logger.info("Book " + book.getName());
               }
+
+              @Override
               public void onReadError(Exception e) {
                 logger.info("Read error");
               }
