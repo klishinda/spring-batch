@@ -12,7 +12,7 @@ spring:
       mongodb:
         port: 27017
         host: localhost
-        database: library
+        database: library2
   jpa:
     properties:
       hibernate:

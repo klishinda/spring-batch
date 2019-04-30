@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import ru.otus.homework.model.postgresql.Comment;
 
 import java.util.Date;
 
@@ -20,10 +21,14 @@ public class NewComment {
   private String comment;
   private Date createDate;
 
-  public NewComment(byte mark, String userName, String comment, Date createDate) {
+  private NewComment(byte mark, String userName, String comment, Date createDate) {
     this.mark = mark;
     this.userName = userName;
     this.comment = comment;
     this.createDate = createDate;
+  }
+
+  public static NewComment convertComment(Comment comment) {
+    return new NewComment(comment.getMark(), comment.getUserName(), comment.getComment(), comment.getCreateDate());
   }
 }
