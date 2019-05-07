@@ -8,6 +8,11 @@ spring:
     username: postgres
     password: qwerty
     initialization-mode: always
+  data:
+      mongodb:
+        port: 27017
+        host: localhost
+        database: library2
   jpa:
     properties:
       hibernate:

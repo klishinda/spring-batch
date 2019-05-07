@@ -1,7 +1,7 @@
 package ru.otus.homework.bookRepository;
 
 import org.springframework.data.repository.CrudRepository;
-import ru.otus.homework.model.Book;
+import ru.otus.homework.model.postgresql.Book;
 
 import java.util.List;
 

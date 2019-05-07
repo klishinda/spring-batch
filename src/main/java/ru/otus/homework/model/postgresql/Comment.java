@@ -1,4 +1,4 @@
-package ru.otus.homework.model;
+package ru.otus.homework.model.postgresql;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
